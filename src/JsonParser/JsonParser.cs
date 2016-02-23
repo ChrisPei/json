@@ -135,9 +135,9 @@ namespace Json
 
         private static readonly char[] _base16 = new[]
                              {
-                                 '0', '1', '2', '3', 
-                                 '4', '5', '6', '7', 
-                                 '8', '9', 'A', 'B', 
+                                 '0', '1', '2', '3',
+                                 '4', '5', '6', '7',
+                                 '8', '9', 'A', 'B',
                                  'C', 'D', 'E', 'F'
                              };
 
@@ -147,6 +147,13 @@ namespace Json
         }
 
         public static string Serialize<T>(T instance)
+        {
+            var bag = GetBagForObject(instance);
+
+            return ToJson(bag);
+        }
+
+        public static string Serialize(object instance)
         {
             var bag = GetBagForObject(instance);
 
@@ -375,13 +382,13 @@ namespace Json
                 return;
             }
 
-            #if PCL
+#if PCL
             var properties = item.GetRuntimeProperties().ToArray();
-            #else
+#else
             var properties = item.GetProperties(
                 BindingFlags.Public | BindingFlags.Instance
                 );
-            #endif
+#endif
 
             _cache.Add(item, properties);
         }
@@ -497,7 +504,7 @@ namespace Json
         {
             sb.Append("\"");
             var symbols = item.ToString().ToCharArray();
-            
+
             var unicodes = symbols.Select(symbol => GetUnicode(symbol));
 
             foreach (var unicode in unicodes)
